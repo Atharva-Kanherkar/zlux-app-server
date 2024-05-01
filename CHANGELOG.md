@@ -2,6 +2,9 @@
 
 All notable changes to the Zlux App Server package will be documented in this file.
 
+## v2.16.0
+- Bugfix: Removed message saying node not found prior to discovery of node. Now, you will only get an error message if node is not found after lookup in NODE_HOME.
+
 ## v2.14.0
 - Enhancement: Updated schema to specify multiple discovery servers.
 
