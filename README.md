@@ -81,7 +81,17 @@ On z/OS, git 2.14.4 is the minimum needed.
 ### Runtime
 To use the App Server, the following is required:
 
-* **NodeJS** - v16.x up to v18.x is officially supported by the Zowe community.
+## Node Version Setup for Zowe on Windows
+
+### Choosing the Right Node Version
+For setting up Zowe, it's recommended to install Node 16.x. Although Zowe supports up to Node 18, Node 16.x is more stable and tends to work better without errors.
+
+### Installing Node on Windows
+Avoid using `nvm` for updating Node versions on Windows as it can cause bugs. Instead, delete your current version and install the exact version from the [Node.js official website](https://nodejs.org/).
+
+### Common `nvm` Errors on Windows
+Using `nvm` on Windows might result in errors like "Can't find the module ncp". It's better to avoid using `nvm` to prevent these issues.
+
 
 Plugins may depend upon other technologies, such as Java or ZSS. A plugin's [pluginDefinition](https://docs.zowe.org/stable/extend/extend-desktop/mvd-plugindefandstruct) or README will help you to understand if additional prerequisites are needed for that plugin.
 
