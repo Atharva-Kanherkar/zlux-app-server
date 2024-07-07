@@ -167,7 +167,7 @@ If you encounter an "Invalid tag name" error or issues at the package level when
 ### Customizing Configurations and Server Errors
 
 #### Validating YAML Configuration
-Ensure your `zowe.yaml` file is valid YAML. Use any online YAML checker to validate your file. Proper configuration is crucial for the system to function correctly.
+Ensure your `zowe.yaml` file is valid YAML. Use any online YAML checker to validate your file. Proper configuration is crucial for the system to function correctly. Please refer the information covered in [Section 7](#7-adding-zss-to-the-environment) to configure your file correctly.
 
 #### Handling Unhandled Rejection Errors
 **Known Issue & Workaround:** If you get an error stating `Unhandled rejection, Type error: Cannot read properties of undefined` after attempting to start your App Server, the issue is most likely with your configuration. Due to some highly customized configuration settings, if there is no easily identifiable cause, you can revert to a less strict version of the App Server via these two commands:
