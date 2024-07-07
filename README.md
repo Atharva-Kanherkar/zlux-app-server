@@ -163,9 +163,28 @@ If you encounter an "Invalid tag name" error or issues at the package level when
 - Reset the `package-lock.json` by running `git checkout package-lock.json` to remove any changes made prior.
 - If the install step still fails, try removing the `package-lock.json` entirely.
 
+
+### Customizing Configurations and Server Errors
+
+#### Validating YAML Configuration
+Ensure your `zowe.yaml` file is valid YAML. Use any online YAML checker to validate your file. Proper configuration is crucial for the system to function correctly.
+
+#### Handling Unhandled Rejection Errors
+**Known Issue & Workaround:** If you get an error stating `Unhandled rejection, Type error: Cannot read properties of undefined` after attempting to start your App Server, the issue is most likely with your configuration. Due to some highly customized configuration settings, if there is no easily identifiable cause, you can revert to a less strict version of the App Server via these two commands:
+
+zlux-server-framework:
+```
+git checkout 7a394212bb13af24b587ea22f3c7267981d31111
+```
+zlux-app-server:
+```
+git checkout d112621faf9d86862ed458e5244732479bf7fbf3
+```
+
 ### Server Logs
 When the server starts, it writes logs to a text file. On z/OS, Unix, and Linux, the server also logs to the terminal via stdout.
 To view the entire logs, you can find the log file within the location specified by the zowe server configuration parameter `zowe.logDirectory`, but will default to `~/.zowe/logs` or `%USERPROFILE%/.zowe/logs` (Windows) if not specified. The log file starts with "appServer" and the filename may also include a timestamp.
+
 
 ## 4. Connect in a browser
 With the App Server started, you can access Apps and the Zowe Desktop from it in a web browser.
@@ -395,6 +414,11 @@ components:
                 ipAddresses:
                     - 0.0.0.0
                 keyring: "/path/to/keystore.p12"
+
+
+
+
+
                 password: "keyringpassword"
                 label: "keylabel"
         dataserviceAuthentication:
