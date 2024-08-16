@@ -49,8 +49,6 @@ To build the App Server and Apps, the following is required:
 
 * **NodeJS** - v16.x minimum up to v18.x
 
-**Note & TODO:** Node 17+ will fail on Windows when running full zlux build, [more information in this thread.](https://stackoverflow.com/questions/69692842/error-message-error0308010cdigital-envelope-routinesunsupported). An upgrade solution needs to be applied across multiple failing components.
-
 **Note:** Some plugins may not install/build with 16, some will not with 18. It is recommended to have both versions present to troubleshoot issues. Example errors include: `Error: error:0308010C:digital envelope routines::unsupported [...]` (may occur with 16). For switching Node versions, avoid using `nvm` for Windows, as it is known to cause bugs.
 
 * **npm** - v6.4 minimum
@@ -129,7 +127,7 @@ This will take some time to complete.
 
 Upon completion, the App Server is ready to be run.
 
-### Fixing Build Failures
+### Fixing build failures
 
 If you encounter errors such as `npm ERR! Conflicting peer dependency [...]` or `Invalid tag name` or in-general issues at the package level when installing dependencies, it may be due to poor package-lock metadata. To resolve:
 - Reset `package-lock.json` via `git checkout *package-lock.json`.
