@@ -47,9 +47,11 @@ Follow each step and you'll be on your way to your first App Server instance!
 ### Building & Developing
 To build the App Server and Apps, the following is required:
 
-* **NodeJS** - v14.x minimum (except v14.17.2) up to v16.x
+* **NodeJS** - v16.x minimum up to v18.x
 
-Note & TODO: Node 17+ will fail on Windows when running full zlux build, [more information in this thread.](https://stackoverflow.com/questions/69692842/error-message-error0308010cdigital-envelope-routinesunsupported). An upgrade solution needs to be applied across multiple failing components
+**Note & TODO:** Node 17+ will fail on Windows when running full zlux build, [more information in this thread.](https://stackoverflow.com/questions/69692842/error-message-error0308010cdigital-envelope-routinesunsupported). An upgrade solution needs to be applied across multiple failing components.
+
+**Note:** Some plugins may not install/build with 16, some will not with 18. It is recommended to have both versions present to troubleshoot issues. Example errors include: `Error: error:0308010C:digital envelope routines::unsupported [...]` (may occur with 16). For switching Node versions, avoid using `nvm` for Windows, as it is known to cause bugs.
 
 * **npm** - v6.4 minimum
 
@@ -81,17 +83,7 @@ On z/OS, git 2.14.4 is the minimum needed.
 ### Runtime
 To use the App Server, the following is required:
 
-## Node Version Setup for Zowe on Windows
-
-### Choosing the Right Node Version
-For setting up Zowe, it's recommended to install Node 16.x. Although Zowe supports up to Node 18, Node 16.x is more stable and tends to work better without errors.
-
-### Installing Node on Windows
-Avoid using `nvm` for updating Node versions on Windows as it can cause bugs. Instead, delete your current version and install the exact version from the [Node.js official website](https://nodejs.org/).
-
-### Common `nvm` Errors on Windows
-Using `nvm` on Windows might result in errors like "Can't find the module ncp". It's better to avoid using `nvm` to prevent these issues.
-
+**NodeJS** - v16.x up to v20.x is officially supported by the Zowe community.
 
 Plugins may depend upon other technologies, such as Java or ZSS. A plugin's [pluginDefinition](https://docs.zowe.org/stable/extend/extend-desktop/mvd-plugindefandstruct) or README will help you to understand if additional prerequisites are needed for that plugin.
 
@@ -135,8 +127,18 @@ This will take some time to complete.
 
 **Note:** It has been reported that building can hang on Windows if you have put the code in a directory that has a symbolic link. Build time can depend on hardware speed, but should take minutes not hours.
 
-
 Upon completion, the App Server is ready to be run.
+
+### Fixing Build Failures
+
+If you encounter errors such as `npm ERR! Conflicting peer dependency [...]` or `Invalid tag name` or in-general issues at the package level when installing dependencies, it may be due to poor package-lock metadata. To resolve:
+- Reset `package-lock.json` via `git checkout *package-lock.json`.
+- If the install still fails, delete `package-lock.json`
+
+To reset package-lock for all repos:
+- `cd zlux`
+- `git submodule foreach "git checkout *package-lock.json"`
+
 
 ## 3. Initial startup
 To start the App Server with all default settings, do the following:
@@ -157,20 +159,11 @@ If you encounter an error message saying `No config file found, initializing`, i
 
 To fix this issue, you need to create a zowe.yaml file in the following directory: `%USERPROFILE%\.zowe\workspace\app-server\serverConfig`. You can use [this](https://github.com/zowe/zlux-app-server/blob/v2.x/staging/defaults/serverConfig/defaults.yaml) template as a starting point.
 
-### Fixing Build Errors
+**Note:** The App server will not remain running until [Section 7](#7-adding-zss-to-the-environment) is complete.
 
-If you encounter an "Invalid tag name" error or issues at the package level when installing dependencies, the error may lie with poor package-lock metadata. To resolve this:
-- Reset the `package-lock.json` by running `git checkout package-lock.json` to remove any changes made prior.
-- If the install step still fails, try removing the `package-lock.json` entirely.
+**Note:** Ensure your `zowe.yaml` file is valid YAML. You may use a safe offline YAML checker such as from [RedHat's VSCode plugin](https://marketplace.visualstudio.com/items?itemName=redhat.vscode-yaml).
 
-
-### Customizing Configurations and Server Errors
-
-#### Validating YAML Configuration
-Ensure your `zowe.yaml` file is valid YAML. Use any online YAML checker to validate your file. Proper configuration is crucial for the system to function correctly. Please refer the information covered in [Section 7](#7-adding-zss-to-the-environment) to configure your file correctly.
-
-#### Handling Unhandled Rejection Errors
-**Known Issue & Workaround:** If you get an error stating `Unhandled rejection, Type error: Cannot read properties of undefined` after attempting to start your App Server, the issue is most likely with your configuration. Due to some highly customized configuration settings, if there is no easily identifiable cause, you can revert to a less strict version of the App Server via these two commands:
+**Known Issue & Workaround:** If you get the error `Unhandled rejection, Type error: Cannot read properties of undefined` after attempting to start your App Server AND your Zowe.yaml is formatted correctly to the best of your knowledge, try the unsupported, less strict version of the App Server via these two commands:
 
 zlux-server-framework:
 ```
@@ -264,7 +257,7 @@ Also, some of the low-level APIs are made possibly by ZSS working in concert wit
 To build ZSS, code must be placed on z/OS as it can only be compiled there and run there. However, if you don't have access to a mainframe, you have 2 options:
 1. Sign up for the [IBM Open Zowe trial](https://community.ibm.com/community/user/ibmz-and-linuxone/blogs/wen-ting-su/2023/04/28/unleash-the-power-of-zowe-v2-with-updated-trial) to obtain trial credentials to a mainframe
 2. or you can take advantage of the [ZSS mock server](https://github.com/zowe/zss/tree/v2.x/staging/mock) written in Python
-**Note: ** ZSS mock server may not be up to date with latest ZSS features.
+**Note:** ZSS mock server may not be up to date with latest ZSS features.
 
 ### Building ZSS
 To build ZSS from source, it is recommended to use git on z/OS from [step 0](#0-prerequisites). You can use this command to get the code:
@@ -414,11 +407,6 @@ components:
                 ipAddresses:
                     - 0.0.0.0
                 keyring: "/path/to/keystore.p12"
-
-
-
-
-
                 password: "keyringpassword"
                 label: "keylabel"
         dataserviceAuthentication:
